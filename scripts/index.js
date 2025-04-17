@@ -1,13 +1,3 @@
-// @todo: Темплейт карточки
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
-
 // @todo: Функция создания карточки
 function createCard(contentCard, deleteCallback) {
   const cardTemplate = document.querySelector("#card-template").content;
@@ -16,9 +6,11 @@ function createCard(contentCard, deleteCallback) {
   cardElement.querySelector(".card__title").textContent = contentCard.name;
   cardElement.querySelector(".card__image").src = contentCard.link;
   cardElement.querySelector(".card__image").alt = contentCard.name;
-  
+
   const buttonDelete = cardElement.querySelector(".card__delete-button");
-  buttonDelete.addEventListener("click", () => {deleteCallback(cardElement);});
+  buttonDelete.addEventListener("click", () => {
+    deleteCallback(cardElement);
+  });
 
   return cardElement;
 }
