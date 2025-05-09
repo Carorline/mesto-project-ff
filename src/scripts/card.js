@@ -1,5 +1,7 @@
-export { createCard, deleteCard, likeCard};
+export { createCard, deleteCard, addLikeCard};
 
+// Константа шаблона для карточки
+  const cardTemplate = document.querySelector("#card-template").content;
 // Функция создания карточки
 function createCard(
   contentCard,
@@ -7,24 +9,23 @@ function createCard(
   likeCallback,
   openCardCallback
 ) {
-  const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
-  const card = cardElement.querySelector(".card__image");
+  const cardImage = cardElement.querySelector(".card__image");
   cardElement.querySelector(".card__title").textContent = contentCard.name;
-  card.alt = contentCard.name;
-  card.src = contentCard.link;
+  cardImage.alt = contentCard.name;
+  cardImage.src = contentCard.link;
 
   const buttonDelete = cardElement.querySelector(".card__delete-button");
   buttonDelete.addEventListener("click", () => {
     deleteCallback(cardElement);
   });
 
-  const likeButton = cardElement.querySelector(".card__like-button");
-  likeButton.addEventListener("click", (event) => {
+  const buttonAddLikeCard = cardElement.querySelector(".card__like-button");
+  buttonAddLikeCard.addEventListener("click", (event) => {
     likeCallback(event);
   });
 
-  card.addEventListener("click", () => {
+  cardImage.addEventListener("click", () => {
     openCardCallback(contentCard);
   });
 
@@ -37,6 +38,6 @@ function deleteCard(cardElement) {
 }
 
 // Функция лайка карточки
-function likeCard(event) {
+function addLikeCard(event) {
   event.target.classList.toggle("card__like-button_is-active");
 }

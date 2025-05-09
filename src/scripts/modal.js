@@ -25,7 +25,6 @@ function closeModalEsc(event) {
 // Функция закрытия попапа по клику на оверлей
 function closeModalOverflow(event) {
   if (event.currentTarget === event.target) {
-    const popup = document.querySelector(".popup_is-opened");
-    closeModal(popup);
+    closeModal(event.target);
   }
 }
