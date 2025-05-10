@@ -1,7 +1,7 @@
-export { createCard, deleteCard, addLikeCard};
+export { createCard, deleteCard, addLikeCard };
 
 // Константа шаблона для карточки
-  const cardTemplate = document.querySelector("#card-template").content;
+const cardTemplate = document.querySelector("#card-template").content;
 // Функция создания карточки
 function createCard(
   contentCard,
@@ -11,11 +11,11 @@ function createCard(
 ) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
-  const cardImageTitle = cardElement.querySelector(".card__title");
+  const cardTitle = cardElement.querySelector(".card__title");
   const buttonDelete = cardElement.querySelector(".card__delete-button");
   const buttonAddLikeCard = cardElement.querySelector(".card__like-button");
 
-  cardImageTitle.textContent = contentCard.name;
+  cardTitle.textContent = contentCard.name;
   cardImage.alt = contentCard.name;
   cardImage.src = contentCard.link;
 
