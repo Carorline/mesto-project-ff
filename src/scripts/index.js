@@ -24,15 +24,18 @@ const formAddNewCardInputLink = document.querySelector('input[name="link"]');
 
 // Константы для popap Image
 const popupFullImage = document.querySelector(".popup_type_image");
+const popupFullImagePicture= popupFullImage.querySelector(".popup__image");
+const popupFullImageCaption = popupFullImage.querySelector(".popup__caption");
+
 
 // Константа для всех popups
 const popups = document.querySelectorAll(".popup");
 
 // Функция открытия попапа с изображением
 function clickPopupFullImage({ name, link }) {
-  popupFullImage.querySelector(".popup__image").src = link;
-  popupFullImage.querySelector(".popup__image").alt = name;
-  popupFullImage.querySelector(".popup__caption").textContent = name;
+  popupFullImagePicture.src = link;
+  popupFullImagePicture.alt = name;
+  popupFullImageCaption.textContent = name;
   openModal(popupFullImage);
 }
 

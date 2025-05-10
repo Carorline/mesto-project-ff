@@ -11,16 +11,18 @@ function createCard(
 ) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
-  cardElement.querySelector(".card__title").textContent = contentCard.name;
+  const cardImageTitle = cardElement.querySelector(".card__title");
+  const buttonDelete = cardElement.querySelector(".card__delete-button");
+  const buttonAddLikeCard = cardElement.querySelector(".card__like-button");
+
+  cardImageTitle.textContent = contentCard.name;
   cardImage.alt = contentCard.name;
   cardImage.src = contentCard.link;
 
-  const buttonDelete = cardElement.querySelector(".card__delete-button");
   buttonDelete.addEventListener("click", () => {
     deleteCallback(cardElement);
   });
 
-  const buttonAddLikeCard = cardElement.querySelector(".card__like-button");
   buttonAddLikeCard.addEventListener("click", (event) => {
     likeCallback(event);
   });
