@@ -11,22 +11,27 @@ const buttonOpenPopupProfile = document.querySelector(".profile__edit-button");
 const popupProfile = document.querySelector(".popup_type_edit");
 const formProfile = document.querySelector('form[name="edit-profile"]');
 const formProfileInputName = document.querySelector('input[name="name"]');
-const formProfileInputDescription = document.querySelector('input[name="description"]');
+const formProfileInputDescription = document.querySelector(
+  'input[name="description"]'
+);
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
 // Константы для popap New Card
-const buttonOpenPopupAddNewCard = document.querySelector(".profile__add-button");
+const buttonOpenPopupAddNewCard = document.querySelector(
+  ".profile__add-button"
+);
 const popupAddNewCard = document.querySelector(".popup_type_new-card");
 const formAddNewCard = document.querySelector('form[name="new-place"]');
-const formAddNewCardInputName = document.querySelector('input[name="place-name"]');
+const formAddNewCardInputName = document.querySelector(
+  'input[name="place-name"]'
+);
 const formAddNewCardInputLink = document.querySelector('input[name="link"]');
 
 // Константы для popap Image
 const popupFullImage = document.querySelector(".popup_type_image");
-const popupFullImagePicture= popupFullImage.querySelector(".popup__image");
+const popupFullImagePicture = popupFullImage.querySelector(".popup__image");
 const popupFullImageCaption = popupFullImage.querySelector(".popup__caption");
-
 
 // Константа для всех popups
 const popups = document.querySelectorAll(".popup");
@@ -50,8 +55,16 @@ function handleProfile(event) {
 // Функция «отправки» формы New Card
 function handleAddNewCard(event) {
   event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  const contentCard = { name: formAddNewCardInputName.value, link: formAddNewCardInputLink.value }; // Создаем объект с данными карточки
-  const cardElement = createCard(contentCard, deleteCard, addLikeCard, clickPopupFullImage); // Создаем карточку
+  const contentCard = {
+    name: formAddNewCardInputName.value,
+    link: formAddNewCardInputLink.value,
+  }; // Создаем объект с данными карточки
+  const cardElement = createCard(
+    contentCard,
+    deleteCard,
+    addLikeCard,
+    clickPopupFullImage
+  ); // Создаем карточку
   listPlaces.prepend(cardElement); // добавляем карточку в список
   formAddNewCard.reset(); // Сбрасываем форму
   closeModal(popupAddNewCard); // Закрываем попап
@@ -80,7 +93,9 @@ buttonOpenPopupProfile.addEventListener("click", () => {
 });
 
 // Открытие popap New Card
-buttonOpenPopupAddNewCard.addEventListener("click", () => openModal(popupAddNewCard));
+buttonOpenPopupAddNewCard.addEventListener("click", () =>
+  openModal(popupAddNewCard)
+);
 
 // Прикрепляем обработчик к форме :он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfile);
