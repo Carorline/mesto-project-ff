@@ -2,6 +2,7 @@ import "../pages/index.css"; //  импорт главного файла сти
 import { initialCards } from "./cards.js"; // импорт файла cards
 import { openModal, closeModal } from "./modal.js"; // импорт файла modal.js
 import { createCard, deleteCard, addLikeCard } from "./card.js"; // импорт файла card.js
+import { enableValidation } from "./validation.js"; // импорт файла validate.js
 
 // Константа контейнера с карточками
 const listPlaces = document.querySelector(".places__list");
@@ -84,6 +85,18 @@ function renderCards() {
 }
 
 renderCards(); // Отрисовка карточек
+
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+});;
 
 //Открытие popap Edit Profile
 buttonOpenPopupProfile.addEventListener("click", () => {
