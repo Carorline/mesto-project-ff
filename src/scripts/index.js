@@ -2,7 +2,7 @@ import "../pages/index.css"; //  импорт главного файла сти
 import { initialCards } from "./cards.js"; // импорт файла cards
 import { openModal, closeModal } from "./modal.js"; // импорт файла modal.js
 import { createCard, deleteCard, addLikeCard } from "./card.js"; // импорт файла card.js
-import { enableValidation } from "./validation.js"; // импорт файла validate.js
+import { enableValidation, clearValidation } from "./validation.js"; // импорт файла validate.js
 
 // Константа контейнера с карточками
 const listPlaces = document.querySelector(".places__list");
@@ -37,6 +37,16 @@ const popupFullImageCaption = popupFullImage.querySelector(".popup__caption");
 // Константа для всех popups
 const popups = document.querySelectorAll(".popup");
 
+// Конфигурация валидации
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
+
 // Функция открытия попапа с изображением
 function clickPopupFullImage({ name, link }) {
   popupFullImagePicture.src = link;
@@ -68,6 +78,7 @@ function handleAddNewCard(event) {
   ); // Создаем карточку
   listPlaces.prepend(cardElement); // добавляем карточку в список
   formAddNewCard.reset(); // Сбрасываем форму
+  clearValidation(popupAddNewCard, validationConfig);
   closeModal(popupAddNewCard); // Закрываем попап
 }
 
@@ -88,21 +99,14 @@ renderCards(); // Отрисовка карточек
 
 // включение валидации вызовом enableValidation
 // все настройки передаются при вызове
-
-enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-});;
+enableValidation(validationConfig);
 
 //Открытие popap Edit Profile
 buttonOpenPopupProfile.addEventListener("click", () => {
   formProfileInputName.value = profileName.textContent;
   formProfileInputDescription.value = profileDescription.textContent;
   openModal(popupProfile);
+  clearValidation(popupProfile, validationConfig);
 });
 
 // Открытие popap New Card
