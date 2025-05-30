@@ -1,4 +1,5 @@
 export { createCard, deleteCard, addLikeCard };
+import {deleteCardAPI} from "./api.js";
 
 // Константа шаблона для карточки
 const cardTemplate = document.querySelector("#card-template").content;
@@ -7,19 +8,28 @@ function createCard(
   contentCard,
   deleteCallback,
   likeCallback,
-  openCardCallback
+  openCardCallback,
+  userId
 ) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
   const buttonDelete = cardElement.querySelector(".card__delete-button");
   const buttonAddLikeCard = cardElement.querySelector(".card__like-button");
+  const likeCounCard = cardElement.querySelector('.card__like-counter');
 
   cardTitle.textContent = contentCard.name;
   cardImage.alt = contentCard.name;
   cardImage.src = contentCard.link;
+  likeCounCard.textContent = contentCard.likes.length;
+  cardElement.id = contentCard._id;
 
-  buttonDelete.addEventListener("click", () => {
+  // Проверка, является ли текущий пользователь владельцем карточки
+  if(contentCard.owner._id !== userId) {
+    buttonDelete.classList.add("card__delete-button-hidden");
+  }
+
+  buttonDelete.addEventListener("click", () => { 
     deleteCallback(cardElement);
   });
 
@@ -36,7 +46,13 @@ function createCard(
 
 // Функция удаления карточки
 function deleteCard(cardElement) {
-  cardElement.remove();
+  deleteCardAPI(cardElement.id) // Удаляем карточку из API
+    .then(() => {
+      cardElement.remove();; // Удаляем карточку из DOM
+    })
+    .catch((err) => {
+      console.log('Ошибка удаления карточки:', err);
+    });
 }
 
 // Функция лайка карточки

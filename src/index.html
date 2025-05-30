@@ -29,14 +29,14 @@
             <button class="profile__edit-button" type="button"></button>
             <p class="profile__description">Исследователь океана</p>
           </div>
-          <button class="profile__add-button" type="button"></button>
+          <button class="profile__add-button" type="button" ></button>
         </section>
         <section class="places page__section">
           <ul class="places__list"></ul>
         </section>
       </main>
       <footer class="footer page__section">
-        <p class="footer__copyright">© 2021 Mesto Russia</p>
+        <p class="footer__copyright">© 2025 Mesto Russia</p>
       </footer>
       <div class="popup popup_type_edit popup_is-animated">
         <div class="popup__content">
@@ -67,7 +67,7 @@
               required
             />
             <span class="popup__input-error description-error" ></span>
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button" >
               Сохранить
             </button>
           </form>
@@ -98,7 +98,7 @@
               required
             />
             <span class="popup__input-error link-error" ></span>
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button" >
               Сохранить
             </button>
           </form>
@@ -119,7 +119,10 @@
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button type="button" class="card__like-button"></button>
+          <div class="card__like-container">
+            <button type="button" class="card__like-button"></button>
+            <span class="card__like-counter"></span>
+          </div>
         </div>
       </li>
     </template>
