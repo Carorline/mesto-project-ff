@@ -1,141 +1,131 @@
-export {getUserAPI, getCardsAPI, patchUserAPI, postAddCardAPI, deleteCardAPI, addLikeCardAPI, deleteLikeCardAPI, editUserProfileAPI};
+export {
+  getUserAPI,
+  getCardsAPI,
+  patchUserAPI,
+  postAddCardAPI,
+  deleteCardAPI,
+  addLikeCardAPI,
+  deleteLikeCardAPI,
+  editUserProfileAPI,
+};
+
+const config = {
+  baseUrl: "https://nomoreparties.co/v1/wff-cohort-40",
+  headers: {
+    authorization: "3d67b788-d5fd-47b6-8c9b-eafae687e243",
+    "Content-Type": "application/json",
+  },
+};
 
 // Функция для получения данных пользователя из API
 const getUserAPI = () => {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-40/users/me',{
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243'
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
-    }
-    return res.json();
-  })
-}
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
 // Функция для получения карточек из API
 const getCardsAPI = () => {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-40/cards',{
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243'
+  return fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
-    }
-    return res.json();
-  })
-}
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
 // Функция для обновления данных пользователя в API
-function patchUserAPI(data) {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-40/users/me', {
-    method: 'PATCH',
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
-      'Content-Type': 'application/json'
-    },
+const patchUserAPI = (data) => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    method: "PATCH",
+    headers: config.headers,
     body: JSON.stringify({
       name: data.name,
-      about: data.about
-    })
-  })
-    .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
+      about: data.about,
+    }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-    return res.json();
-  })
-}
-
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
 // Функция для добавления карточки в API
-function postAddCardAPI(data) {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-40/cards', {
-    method: 'POST',
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
-      'Content-Type': 'application/json'
-    },
+const postAddCardAPI = (data) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: "POST",
+    headers: config.headers,
     body: JSON.stringify({
       name: data.name,
-      link: data.link
-    })
-  })
-    .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
+      link: data.link,
+    }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-    return res.json();
-  })
-}
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
 // Функция для удаления карточки из API
 const deleteCardAPI = (cardId) => {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-40/cards/${cardId}`, {
-    method: 'DELETE',
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
-    }
-    return res.json();
-  })
-}
- // Функция для лайка карточки в API
- function addLikeCardAPI(cardId) {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-40/cards/likes/${cardId}`, {
-    method: 'PUT',
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
-    }
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
-    }
-    return res.json();
-  })
- }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
- // Функция для удаления лайка с карточки в API
-function deleteLikeCardAPI(cardId) {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-40/cards/likes/${cardId}`, {
-    method: 'DELETE',
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
+// Функция для лайка карточки в API
+const addLikeCardAPI = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "PUT",
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
+
+// Функция для удаления лайка с карточки в API
+const deleteLikeCardAPI = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-    return res.json();
-  })
-}
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
 // Функция для редактирования профиля пользователя (аватара) в API
-function editUserProfileAPI(data) {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-40/users/me/avatar', {
-    method: 'PATCH',
-    headers: {
-      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
-      'Content-Type': 'application/json'
-    },
+const editUserProfileAPI = (data) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: "PATCH",
+    headers: config.headers,
     body: JSON.stringify({
-      avatar: data.avatar
-    })
-  })
-    .then(res => {
-    if (!res.ok) {
-      throw new Error('Ошибка сети: ' + res.status);
+      avatar: data.avatar,
+    }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
     }
-    return res.json();
-  })
-}
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
