@@ -1,8 +1,8 @@
 import "../pages/index.css"; //  импорт главного файла стилей
 import { openModal, closeModal } from "./modal.js"; // импорт файла modal.js
-import { createCard, deleteCard, addLikeCard } from "./card.js"; // импорт файла card.js
+import { createCard, deleteCard, addLikeCard, deleteLikeCard } from "./card.js"; // импорт файла card.js
 import { enableValidation, clearValidation } from "./validation.js"; // импорт файла validate.js
-import { getUserAPI, getCardsAPI, patchUserAPI, postAddCardAPI} from "./api.js"; // импорт файла api.js
+import { getUserAPI, getCardsAPI, patchUserAPI, postAddCardAPI, editUserProfileAPI } from "./api.js"; // импорт файла api.js
 
 // Константа контейнера с карточками
 const listPlaces = document.querySelector(".places__list");
@@ -88,7 +88,8 @@ function handleAddNewCard(event) {
         deleteCard,
         addLikeCard,
         clickPopupFullImage,
-        card.owner._id // Передаем id владельца карточки
+        card.owner._id, // Передаем id владельца карточки
+        deleteLikeCard
       ); // Создаем карточку
       listPlaces.prepend(cardElement); // добавляем карточку в список
       formAddNewCard.reset(); // Сбрасываем форму
@@ -110,7 +111,8 @@ function renderCards() {
           deleteCard,
           addLikeCard,
           clickPopupFullImage,
-          user._id // Передаем ID пользователя для проверки владельца карточки
+          user._id, // Передаем ID пользователя для проверки владельца карточки
+          deleteLikeCard
         );
         listPlaces.append(cardElement);
       });

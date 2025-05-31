@@ -1,4 +1,4 @@
-export {getUserAPI, getCardsAPI, patchUserAPI, postAddCardAPI, deleteCardAPI};
+export {getUserAPI, getCardsAPI, patchUserAPI, postAddCardAPI, deleteCardAPI, addLikeCardAPI, deleteLikeCardAPI, editUserProfileAPI};
 
 // Функция для получения данных пользователя из API
 const getUserAPI = () => {
@@ -88,19 +88,54 @@ const deleteCardAPI = (cardId) => {
     return res.json();
   })
 }
-// // Функция для получения лайков карточек из API
-// const getLikesCardsAPI = () => {
-//   return fetch('https://nomoreparties.co/v1/wff-cohort-40/cards/likes',{
-//     method: 'PUT',
-//     headers: {
-//       authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243'
-//     }
-//   })
-//   .then(res => {
-//     console.log(res);
-//     if (!res.ok) {
-//       throw new Error('Ошибка сети: ' + res.status);
-//     }
-//     return res.json();
-//   })
-// }
+ // Функция для лайка карточки в API
+ function addLikeCardAPI(cardId) {
+  return fetch(`https://nomoreparties.co/v1/wff-cohort-40/cards/likes/${cardId}`, {
+    method: 'PUT',
+    headers: {
+      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
+    }
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Ошибка сети: ' + res.status);
+    }
+    return res.json();
+  })
+ }
+
+ // Функция для удаления лайка с карточки в API
+function deleteLikeCardAPI(cardId) {
+  return fetch(`https://nomoreparties.co/v1/wff-cohort-40/cards/likes/${cardId}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
+    }
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Ошибка сети: ' + res.status);
+    }
+    return res.json();
+  })
+}
+
+// Функция для редактирования профиля пользователя (аватара) в API
+function editUserProfileAPI(data) {
+  return fetch('https://nomoreparties.co/v1/wff-cohort-40/users/me/avatar', {
+    method: 'PATCH',
+    headers: {
+      authorization: '3d67b788-d5fd-47b6-8c9b-eafae687e243',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      avatar: data.avatar
+    })
+  })
+    .then(res => {
+    if (!res.ok) {
+      throw new Error('Ошибка сети: ' + res.status);
+    }
+    return res.json();
+  })
+}
