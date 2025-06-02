@@ -17,8 +17,8 @@ const listPlaces = document.querySelector(".places__list");
 const buttonOpenPopupProfile = document.querySelector(".profile__edit-button");
 const popupProfile = document.querySelector(".popup_type_edit");
 const formProfile = document.querySelector('form[name="edit-profile"]');
-const formProfileInputName = document.querySelector('input[name="name"]');
-const formProfileInputDescription = document.querySelector(
+const formProfileInputName = formProfile.querySelector('input[name="name"]');
+const formProfileInputDescription = formProfile.querySelector(
   'input[name="description"]'
 );
 const profileName = document.querySelector(".profile__title");
@@ -37,10 +37,13 @@ const buttonOpenPopupAddNewCard = document.querySelector(
 );
 const popupAddNewCard = document.querySelector(".popup_type_new-card");
 const formAddNewCard = document.querySelector('form[name="new-place"]');
-const formAddNewCardInputName = document.querySelector(
+const formAddNewCardInputName = formAddNewCard.querySelector(
   'input[name="place-name"]'
 );
-const formAddNewCardInputLink = document.querySelector('input[name="link"]');
+const formAddNewCardInputLink = formAddNewCard.querySelector('input[name="link"]');
+
+// Константа для хранения текущего пользователя
+let currentUserId = null;
 
 // Константы для popup Image
 const popupFullImage = document.querySelector(".popup_type_image");
@@ -123,8 +126,10 @@ function handleAddNewCard(event) {
   const contentCard = {
     name: formAddNewCardInputName.value,
     link: formAddNewCardInputLink.value,
-  }; //
-  // Получаем данные из формы
+  }; //Получаем данные из формы
+  console.log('name:', formAddNewCardInputName.value);
+console.log('link:', formAddNewCardInputLink.value);
+  console.log('Отправляем:', contentCard);
   postAddCardAPI(contentCard) // Отправляем данные на сервер
     .then((card) => {
       const cardElement = createCard(
@@ -152,6 +157,7 @@ function handleAddNewCard(event) {
 function renderCards() {
   getDataAPI
     .then(([user, cards]) => {
+      currentUserId = user._id; // Сохраняем ID текущего пользователя
       cards.forEach((contentCard) => {
         const cardElement = createCard(
           contentCard,

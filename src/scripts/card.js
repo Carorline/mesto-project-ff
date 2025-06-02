@@ -1,8 +1,17 @@
-export { createCard, deleteCard, addLikeCard, deleteLikeCard };
+export { createCard, deleteCard, addLikeCard, deleteLikeCard};
 import {deleteCardAPI, addLikeCardAPI, deleteLikeCardAPI} from "./api.js";
+import {openModal, closeModal} from "./modal.js";
 
 // Константа шаблона для карточки
 const cardTemplate = document.querySelector("#card-template").content;
+
+// Константы для popup Confirm Delete Card
+const popupConfirmDeleteCard = document.querySelector(".popup_type_confirm_delete_card");
+const confirmDeleteCardButton = popupConfirmDeleteCard.querySelector(".popup__button");
+
+// Константа для хранения карточки для удаления
+let cardToDelete = null;
+
 // Функция создания карточки
 function createCard(
   contentCard,
@@ -35,8 +44,17 @@ function createCard(
   buttonAddLikeCard.classList.add("card__like-button_is-active");
   }
 
-  buttonDelete.addEventListener("click", () => { 
-    deleteCallback(cardElement);
+  buttonDelete.addEventListener("click", () => {
+    cardToDelete = cardElement;
+    openModal(popupConfirmDeleteCard); // Открываем попап подтверждения удаления
+  });
+
+  confirmDeleteCardButton.addEventListener("click", () => {
+    if (cardToDelete) {
+      deleteCallback(cardToDelete);
+      closeModal(popupConfirmDeleteCard);
+      cardToDelete = null;
+    }
   });
 
   buttonAddLikeCard.addEventListener("click", (event) => {
