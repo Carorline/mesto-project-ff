@@ -1,25 +1,17 @@
 export { createCard, deleteCard, addLikeCard, deleteLikeCard};
 import {deleteCardAPI, addLikeCardAPI, deleteLikeCardAPI} from "./api.js";
-import {openModal, closeModal} from "./modal.js";
 
 // Константа шаблона для карточки
 const cardTemplate = document.querySelector("#card-template").content;
 
-// Константы для popup Confirm Delete Card
-const popupConfirmDeleteCard = document.querySelector(".popup_type_confirm_delete_card");
-const confirmDeleteCardButton = popupConfirmDeleteCard.querySelector(".popup__button");
-
-// Константа для хранения карточки для удаления
-let cardToDelete = null;
-
 // Функция создания карточки
 function createCard(
   contentCard,
-  deleteCallback,
   addlikeCallback,
   openCardCallback,
   userId,
-  deletelikeCallback
+  deletelikeCallback,
+  handleDeleteIconClick
 ) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
@@ -38,24 +30,16 @@ function createCard(
   // Проверка, является ли текущий пользователь владельцем карточки
   if(contentCard.owner._id !== userId) {
     buttonDelete.classList.add("card__delete-button-hidden");
+  } else {
+    buttonDelete.addEventListener("click", () => {
+      handleDeleteIconClick(contentCard._id, cardElement);
+    });
   }
+
   // Проверка, есть ли лайк от текущего пользователя
   if (contentCard.likes.some(user => user._id === userId)) {
   buttonAddLikeCard.classList.add("card__like-button_is-active");
   }
-
-  buttonDelete.addEventListener("click", () => {
-    cardToDelete = cardElement;
-    openModal(popupConfirmDeleteCard); // Открываем попап подтверждения удаления
-  });
-
-  confirmDeleteCardButton.addEventListener("click", () => {
-    if (cardToDelete) {
-      deleteCallback(cardToDelete);
-      closeModal(popupConfirmDeleteCard);
-      cardToDelete = null;
-    }
-  });
 
   buttonAddLikeCard.addEventListener("click", (event) => {
     if (event.target.classList.contains("card__like-button_is-active")) {
@@ -73,8 +57,8 @@ function createCard(
 }
 
 // Функция удаления карточки
-function deleteCard(cardElement) {
-  deleteCardAPI(cardElement.id) // Удаляем карточку из API
+function deleteCard(cardId, cardElement) {
+  deleteCardAPI(cardId) // Удаляем карточку из API
     .then(() => {
       cardElement.remove();; // Удаляем карточку из DOM
     })

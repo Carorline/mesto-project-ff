@@ -17,28 +17,25 @@ const config = {
   },
 };
 
+const getResponseData = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
 // Функция для получения данных пользователя из API
 const getUserAPI = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для получения карточек из API
 const getCardsAPI = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для обновления данных пользователя в API
@@ -50,12 +47,7 @@ const patchUserAPI = (data) => {
       name: data.name,
       about: data.about,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для добавления карточки в API
@@ -67,12 +59,7 @@ const postAddCardAPI = (data) => {
       name: data.name,
       link: data.link,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для удаления карточки из API
@@ -80,12 +67,7 @@ const deleteCardAPI = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для лайка карточки в API
@@ -93,12 +75,7 @@ const addLikeCardAPI = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для удаления лайка с карточки в API
@@ -106,12 +83,7 @@ const deleteLikeCardAPI = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };
 
 // Функция для редактирования профиля пользователя (аватара) в API
@@ -122,10 +94,5 @@ const editUserProfileAPI = (data) => {
     body: JSON.stringify({
       avatar: data.avatar,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData)
 };

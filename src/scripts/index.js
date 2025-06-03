@@ -63,6 +63,15 @@ const validationConfig = {
   errorClass: "popup__error_visible",
 };
 
+// Константа для хранения карточки для удаления
+let cardToDelete = null;
+
+// Константы для popup Confirm Delete Card
+const popupConfirmDeleteCard = document.querySelector(".popup_type_confirm_delete_card");
+const confirmDeleteCardButton = popupConfirmDeleteCard.querySelector(".popup__button");
+
+
+// Функция для получения данных пользователя и карточек
 const getDataAPI = Promise.all([getUserAPI(), getCardsAPI()]);
 
 // Функция открытия попапа с изображением
@@ -73,12 +82,21 @@ function clickPopupFullImage({ name, link }) {
   openModal(popupFullImage);
 }
 
+// Функция управления сотоянием загрузки и текста кнопки
+function renderLoading(isLoading, button, loadingText = "Сохранение...") {
+  if (isLoading) {
+    button.dataset.originalText = button.textContent;
+    button.textContent = loadingText;
+  } else {
+    button.textContent = button.dataset.originalText || "Сохранить";
+  }
+}
+
 // Функция «отправки» формы Edit Profile
 function handleProfile(event) {
   event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   const submitButton = formProfile.querySelector(".popup__button");
-  const originalText = submitButton.textContent;
-  submitButton.textContent = "Сохранение..."; // Меняем текст на время загрузки
+  renderLoading(true, submitButton, "Сохранение..."); // Меняем текст на время загрузки
   const { name, description } = event.currentTarget.elements;
   patchUserAPI({
     name: name.value,
@@ -93,7 +111,7 @@ function handleProfile(event) {
       console.log("Ошибка обновления профиля:", err);
     })
     .finally(() => {
-      submitButton.textContent = originalText; // Возвращаем исходный текст
+      renderLoading(false, submitButton, "Сохранение...");
     });
 }
 
@@ -101,8 +119,7 @@ function handleProfile(event) {
 function handleProfileAvatar(event) {
   event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   const submitButton = formProfileAvatar.querySelector(".popup__button");
-  const originalText = submitButton.textContent;
-  submitButton.textContent = "Сохранение..."; // Меняем текст на время загрузки
+  renderLoading(true, submitButton, "Сохранение...");// Меняем текст на время загрузки
   const { link } = event.currentTarget.elements;
   editUserProfileAPI({ avatar: link.value }) // Отправляем данные на сервер
     .then((user) => {
@@ -113,7 +130,7 @@ function handleProfileAvatar(event) {
       console.log("Ошибка обновления аватара:", err);
     })
     .finally(() => {
-      submitButton.textContent = originalText; // Возвращаем исходный текст
+      renderLoading(false, submitButton, "Сохранение..."); // Возвращаем исходный текст
     });
 }
 
@@ -121,24 +138,20 @@ function handleProfileAvatar(event) {
 function handleAddNewCard(event) {
   event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   const submitButton = formAddNewCard.querySelector(".popup__button");
-  const originalText = submitButton.textContent;
-  submitButton.textContent = "Создание..."; // Меняем текст на время загрузки
+  renderLoading(true, submitButton, "Создание..."); // Меняем текст на время загрузки
   const contentCard = {
     name: formAddNewCardInputName.value,
     link: formAddNewCardInputLink.value,
   }; //Получаем данные из формы
-  console.log('name:', formAddNewCardInputName.value);
-console.log('link:', formAddNewCardInputLink.value);
-  console.log('Отправляем:', contentCard);
   postAddCardAPI(contentCard) // Отправляем данные на сервер
     .then((card) => {
       const cardElement = createCard(
         card,
-        deleteCard,
         addLikeCard,
         clickPopupFullImage,
         card.owner._id, // Передаем id владельца карточки
-        deleteLikeCard
+        deleteLikeCard,
+        handleDeleteIconClick
       ); // Создаем карточку
       listPlaces.prepend(cardElement); // добавляем карточку в список
       formAddNewCard.reset(); // Сбрасываем форму
@@ -149,8 +162,15 @@ console.log('link:', formAddNewCardInputLink.value);
       console.log("Ошибка добавления карточки:", err);
     })
     .finally(() => {
-      submitButton.textContent = originalText; // Возвращаем исходный текст
+      renderLoading(false, submitButton, "Создание..."); // Возвращаем исходный текст
     });
+}
+
+// Функция для обработки клика по иконке удаления карточки
+function handleDeleteIconClick(cardId, cardElement) {
+  cardToDelete = { id: cardId, element: cardElement };
+  openModal(popupConfirmDeleteCard);
+  console.log("Клик по иконке удаления карточки:", cardId);
 }
 
 // Функция для отрисовки карточек из API
@@ -161,11 +181,11 @@ function renderCards() {
       cards.forEach((contentCard) => {
         const cardElement = createCard(
           contentCard,
-          deleteCard,
           addLikeCard,
           clickPopupFullImage,
           user._id, // Передаем ID пользователя для проверки владельца карточки
-          deleteLikeCard
+          deleteLikeCard,
+          handleDeleteIconClick
         );
         listPlaces.append(cardElement);
       });
@@ -204,20 +224,33 @@ buttonOpenPopupProfile.addEventListener("click", () => {
 });
 
 // Открытие popup New Card
-buttonOpenPopupAddNewCard.addEventListener("click", () =>
-  openModal(popupAddNewCard)
-);
+buttonOpenPopupAddNewCard.addEventListener("click", () => {
+  formAddNewCard.reset();
+  openModal(popupAddNewCard);
+  clearValidation(popupAddNewCard, validationConfig)
+});
 
 // Открытие popup Edit Avatar
 profileAvatar.addEventListener("click", () => {
+  formProfileAvatar.reset();
   openModal(popupProfileAvatar);
-  clearValidation(popupProfile, validationConfig);
+  clearValidation(popupProfileAvatar, validationConfig);
 });
 
 // Прикрепляем обработчик к форме :он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfile);
 formAddNewCard.addEventListener("submit", handleAddNewCard);
 formProfileAvatar.addEventListener("submit", handleProfileAvatar);
+
+// Обработчик клика по кнопке подтверждения удаления карточки
+confirmDeleteCardButton.addEventListener("click", (event) => {
+  event.preventDefault(); // Отменяем стандартное поведение кнопки
+  if (cardToDelete) {
+    deleteCard(cardToDelete.id, cardToDelete.element); // <-- передаём id и элемент!
+    closeModal(popupConfirmDeleteCard);
+    cardToDelete = null;
+  }
+});
 
 // Закрытие popup по нажатию на крестик
 popups.forEach((popup) => {
